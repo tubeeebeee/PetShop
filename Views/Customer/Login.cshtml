@@ -1,0 +1,78 @@
+﻿<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 m-auto">
+            <input id="token" hidden value=""/>
+            <form id="frm-login">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input class="form-control" name="Email" type="email" required/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input class="form-control" name="Password" type="password" data-parsley-minlength="3" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <button id="btn-login" class="btn btn-primary">Đăng nhập</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $("#btn-login").click(function(e){
+            e.preventDefault()
+            let isSuccess = $("#frm-login").parsley().validate();
+            if(isSuccess){
+                const formLogin = document.getElementById('frm-login');
+                let formData = new FormData(formLogin);
+                $.ajax({
+                    type: "POST",
+                    url: "Customer/Login",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res){
+                        res = JSON.parse(res);
+                        console.log(res);
+                        if(res.IsError){
+                            formLogin.reset();
+                            $("input").addClass("parsley-error");
+                            //message when error
+                            $.toast({
+                                heading: 'Error',
+                                text: 'email or password is not valid, please enter again',
+                                showHideTransition: 'fade',
+                                icon: 'error',
+                                position: 'top-right'
+                            })
+                        }
+                        else{
+                            sessionStorage.setItem("key-token", res.Token);
+                            var token = sessionStorage.getItem("key-token");
+                            var headers = {};
+                            if (token) {
+                                headers.Authorization = 'Bearer ' + token;
+                            }
+                            $.ajax({
+                                type: 'GET',
+                                url: 'Customer/SettingAccount',
+                                headers: headers
+                            }).done(function (data) {
+                                window.location.href = "Customer/SettingAccount";
+                            }).fail();
+                        }
+                    },
+                    error: function(){
+
+                    }
+                });
+            }
+        });
+    </script>
+}

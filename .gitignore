@@ -1,0 +1,6 @@
+*~
+*.vs
+
+/WebApplication/bin
+/WebApplication/obj
+/WebApplication/Properties/PublishProfiles
