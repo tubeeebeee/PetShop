@@ -36,8 +36,8 @@ namespace PetShop
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddTransient<ICustomer_Repository, Customer_Repository>();
-            services.AddTransient<IToken_Repository, Token_Repository>();
+            services.AddScoped<ICustomer_Repository, Customer_Repository>();
+            services.AddScoped<IToken_Repository, Token_Repository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -56,6 +56,12 @@ namespace PetShop
                 };
             });
             services.AddHttpContextAccessor();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);//We set Time here 
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,8 +94,8 @@ namespace PetShop
             app.UseRouting();
 
             app.UseAuthentication();
-            
-            
+            app.UseAuthorization();
+
 
 
             app.UseEndpoints(endpoints =>

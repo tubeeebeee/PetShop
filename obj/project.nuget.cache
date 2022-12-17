@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FTxgeH2pJ+wsKe0L6uEkQuC5xxDYqZOra0eYwM/VXzEAxNjTNdqjrXa8Jk6CYG2+E2oeKguDmKGKOz7g8McDyQ==",
+  "dgSpecHash": "hauf1MG2zur6eiBXVCdRyYySCBWkAWs+CYhCj2iUoHELx26Bi3cRkJu5UhHw4islBP59Ylk2ociMYtOew1GQ9Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\Desktop\\git-final-pet-project\\PetShop\\PetShop.csproj",
+  "projectFilePath": "C:\\Users\\admin\\Desktop\\github-pet\\PetShop\\PetShop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

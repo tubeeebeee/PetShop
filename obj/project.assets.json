@@ -7625,11 +7625,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\Desktop\\git-final-pet-project\\PetShop\\PetShop.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\Desktop\\github-pet\\PetShop\\PetShop.csproj",
       "projectName": "PetShop",
-      "projectPath": "C:\\Users\\admin\\Desktop\\git-final-pet-project\\PetShop\\PetShop.csproj",
+      "projectPath": "C:\\Users\\admin\\Desktop\\github-pet\\PetShop\\PetShop.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\Desktop\\git-final-pet-project\\PetShop\\obj\\",
+      "outputPath": "C:\\Users\\admin\\Desktop\\github-pet\\PetShop\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

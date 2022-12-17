@@ -38,35 +38,45 @@
                     processData: false,
                     contentType: false,
                     success: function(res){
-                        res = JSON.parse(res);
-                        console.log(res);
-                        if(res.IsError){
-                            formLogin.reset();
-                            $("input").addClass("parsley-error");
-                            //message when error
-                            $.toast({
-                                heading: 'Error',
-                                text: 'email or password is not valid, please enter again',
-                                showHideTransition: 'fade',
-                                icon: 'error',
-                                position: 'top-right'
-                            })
+                        if(res.indexOf("html") > -1){
+                            //var newDoc = document.open("text/html", "replace");
+                            //newDoc.write(res);
+                            //newDoc.close();
+                            window.location.href = "Customer/SettingAccount";
                         }
                         else{
-                            sessionStorage.setItem("key-token", res.Token);
-                            var token = sessionStorage.getItem("key-token");
-                            var headers = {};
-                            if (token) {
-                                headers.Authorization = 'Bearer ' + token;
+                            res = JSON.parse(res);
+                            console.log(res);
+                            if (res.IsError) {
+                                formLogin.reset();
+                                $("input").addClass("parsley-error");
+                                //message when error
+                                $.toast({
+                                    heading: 'Error',
+                                    text: 'email or password is not valid, please enter again',
+                                    showHideTransition: 'fade',
+                                    icon: 'error',
+                                    position: 'top-right'
+                                })
                             }
-                            $.ajax({
-                                type: 'GET',
-                                url: 'Customer/SettingAccount',
-                                headers: headers
-                            }).done(function (data) {
-                                window.location.href = "Customer/SettingAccount";
-                            }).fail();
+                            else {
+                                //sessionStorage.setItem("key-token", res.Token);
+                                //var token = sessionStorage.getItem("key-token");
+                                //var headers = {};
+                                //if (token) {
+                                //    headers.Authorization = 'Bearer ' + token;
+                                //}
+                                //$.ajax({
+                                //    type: 'GET',
+                                //    url: 'Customer/SettingAccount',
+                                //    headers: headers
+                                //}).done(function (data) {
+                                //    window.location.href = "Customer/SettingAccount";
+                                //}).fail();
+                                console.log("test");
+                            }
                         }
+                        
                     },
                     error: function(){
 

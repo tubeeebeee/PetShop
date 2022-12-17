@@ -1,6 +1,6 @@
 *~
 *.vs
 
-/WebApplication/bin
-/WebApplication/obj
-/WebApplication/Properties/PublishProfiles
+/PetShop/bin
+/PetShop/obj
+/PetShop/Properties/PublishProfiles

@@ -21,24 +21,19 @@ namespace PetShop.Repository.core
     public class Customer_Repository : ICustomer_Repository
     {
         private readonly IConfiguration _config;
+        private readonly IToken_Repository _tokenService;
         private readonly DataContext _db;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Customer_Repository(IConfiguration config, DataContext db, IHttpContextAccessor httpContextAccessor)
+        public Customer_Repository(IConfiguration config, DataContext db, IHttpContextAccessor httpContextAccessor, IToken_Repository tokenService)
         {
                 _config = config;
                 _db = db;
-            _httpContextAccessor = httpContextAccessor;
+                _tokenService = tokenService;
+            //_httpContextAccessor = httpContextAccessor;
         }
 
-        private string GenerateJSONWebToken(CustomerLoginModel userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(issuer: "http://localhost:5000/", audience: "http://localhost:5000/", claims: null, expires: DateTime.Now.AddMinutes(60), signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+        
         public async Task<ResponseModel> Login(CustomerLoginModel customerModel)
         {
             try
@@ -48,8 +43,11 @@ namespace PetShop.Repository.core
                 
                 if (customer != null)
                 {
+                    var validUser = new CustomerLoginModel();
+                    validUser.Email = customerModel.Email;
+                    validUser.Role = "admin";
                     bool verified = BCrypt.Net.BCrypt.Verify(customerModel.Password, customer.Password);
-                    tokenString = verified == true ? GenerateJSONWebToken(customerModel) : "";
+                    tokenString = verified == true ? _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), validUser) : "";
 
                     
                     if (string.IsNullOrEmpty(tokenString))

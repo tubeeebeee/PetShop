@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using PetShop.Models.CustomerModel;
 using PetShop.Repository;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -14,10 +17,14 @@ namespace PetShop.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomer_Repository _rep;
+        private readonly IToken_Repository _tokenService;
+        private readonly IConfiguration _config;
         
-        public CustomerController(ICustomer_Repository rep)
+        public CustomerController(ICustomer_Repository rep, IToken_Repository tokenService, IConfiguration config)
         {
             _rep = rep;
+            _tokenService = tokenService;
+            _config = config;
         }
         public IActionResult Index()
         {
@@ -33,13 +40,32 @@ namespace PetShop.Controllers
         public async Task<IActionResult> Login(CustomerLoginModel customer)
         {
             var response = await _rep.Login(customer);
-            return Json(JsonConvert.SerializeObject(response));
+            if(!string.IsNullOrEmpty(response.Token))
+            {
+                HttpContext.Session.SetString("Token", response.Token);
+                return RedirectToAction("SettingAccount");
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(response));
+            }
         }
+        [Authorize]
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> SettingAccount(string token)
+        public IActionResult SettingAccount()
         {
+            string token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return (RedirectToAction("Login"));
+            }
+            if (!_tokenService.IsTokenValid(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), token))
+            {
+                return (RedirectToAction("Login"));
+            }
+            ViewBag.Message = token;
             return View();
+            
         }
     }
 }
