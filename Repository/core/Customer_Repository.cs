@@ -43,11 +43,9 @@ namespace PetShop.Repository.core
                 
                 if (customer != null)
                 {
-                    var validUser = new CustomerLoginModel();
-                    validUser.Email = customerModel.Email;
-                    validUser.Role = "admin";
+                    
                     bool verified = BCrypt.Net.BCrypt.Verify(customerModel.Password, customer.Password);
-                    tokenString = verified == true ? _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), validUser) : "";
+                    tokenString = verified == true ? _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), customer) : "";
 
                     
                     if (string.IsNullOrEmpty(tokenString))

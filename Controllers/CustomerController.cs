@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using PetShop.Models.CustomerModel;
 using PetShop.Repository;
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PetShop.Controllers
@@ -62,6 +64,19 @@ namespace PetShop.Controllers
             if (!_tokenService.IsTokenValid(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), token))
             {
                 return (RedirectToAction("Login"));
+            }
+
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                // or
+                ViewBag.Pid = identity.FindFirst("Pid").Value;
+                ViewBag.FullName = identity.FindFirst("FullName").Value;
+                ViewBag.Email = identity.FindFirst("Email").Value;
+                
+
             }
             ViewBag.Message = token;
             return View();

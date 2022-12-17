@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace PetShop.Controllers
@@ -20,9 +22,10 @@ namespace PetShop.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
-
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

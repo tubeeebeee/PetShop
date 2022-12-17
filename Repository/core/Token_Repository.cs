@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System;
 using PetShop.Models.CustomerModel;
+using PetShop.Areas.Customer.Models;
 
 namespace PetShop.Repository.core
 {
@@ -11,13 +12,12 @@ namespace PetShop.Repository.core
     {
         private const double EXPIRY_DURATION_MINUTES = 30;
 
-        public string BuildToken(string key, string issuer, CustomerLoginModel user)
+        public string BuildToken(string key, string issuer, Customer user)
         {
             var claims = new[] {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.NameIdentifier,
-                Guid.NewGuid().ToString())
+                new Claim("FullName", user.FirstName + " " + user.LastName),
+                new Claim("Pid", user.Pid.ToString()),
+                new Claim("Email", user.Email),
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

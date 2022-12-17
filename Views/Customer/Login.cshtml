@@ -38,7 +38,8 @@
                     processData: false,
                     contentType: false,
                     success: function(res){
-                        if(res.indexOf("html") > -1){
+                        //if(res.indexOf("html") > -1){
+                        if(/\bhtml\b/gi.test(res)){
                             //var newDoc = document.open("text/html", "replace");
                             //newDoc.write(res);
                             //newDoc.close();
