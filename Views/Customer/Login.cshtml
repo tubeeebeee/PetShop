@@ -18,6 +18,15 @@
                         <button id="btn-login" class="btn btn-primary">Đăng nhập</button>
                     </div>
                 </div>
+                <hr/>
+                <!-- Display login status -->
+                <div id="status"></div>
+
+                <!-- Facebook login or logout button -->
+                <a href="javascript:void(0);" onclick="fbLogin();" id="fbLink">đăng nhập fb</a>
+
+                <!-- Display user's profile info -->
+                <div class="ac-data" id="userData"></div>
             </form>
         </div>
     </div>
@@ -38,11 +47,7 @@
                     processData: false,
                     contentType: false,
                     success: function(res){
-                        //if(res.indexOf("html") > -1){
                         if(/\bhtml\b/gi.test(res)){
-                            //var newDoc = document.open("text/html", "replace");
-                            //newDoc.write(res);
-                            //newDoc.close();
                             window.location.href = "Customer/SettingAccount";
                         }
                         else{
@@ -74,7 +79,7 @@
                                 //}).done(function (data) {
                                 //    window.location.href = "Customer/SettingAccount";
                                 //}).fail();
-                                console.log("test");
+                                
                             }
                         }
                         
@@ -85,5 +90,62 @@
                 });
             }
         });
+
+        function fbLogin() {
+            FB.login(function (response) {
+                if (response.authResponse) {      
+                    if (response.status === 'connected') {
+                        let token = response.authResponse.accessToken;
+                        $.ajax({
+                            type: "POST",
+                            url: "Customer/LoginWithFacebook",
+                            data: { token },
+                            success: function () {
+
+                            },
+                            error: function () {
+
+                            }
+                        });
+                        //FB.api("/me", {fields: 'id, first_name, last_name, email, picture, verified' }, function(res){
+                        //    console.log(res);
+                        //    $.ajax({
+                        //        type: "POST",
+                        //        url: "Customer/LoginWithFacebook",
+                        //        data: { token },
+                        //        success:function(){
+
+                        //        },
+                        //        error:function(){
+
+                        //        }
+                        //    });
+                        //});
+                    } else {
+                        // The person is not logged into your webpage or we are unable to tell.
+                    }
+                    
+                    
+                } else {
+                    document.getElementById('status').innerHTML = 'User cancelled login or did not fully authorize.';
+                }
+            }, { scope: 'public_profile,email' });
+        }
+
+        function getFbUserData() {
+            FB.api('/me', { locale: 'en_US', fields: 'id,first_name,last_name,email,picture' },
+                function (response) {
+                    document.getElementById('fbLink').setAttribute("onclick", "fbLogout()");
+                    document.getElementById('fbLink').innerHTML = 'Logout from Facebook';
+                    document.getElementById('status').innerHTML = '<p>Thanks for logging in, ' + response.first_name + '!</p>';
+                    document.getElementById('userData').innerHTML = '<h2>Facebook Profile Details</h2><p><img src="' + response.picture.data.url + '"/></p><p><b>FB ID:</b> ' + response.id + '</p><p><b>Name:</b> ' + response.first_name + ' ' + response.last_name + '</p><p><b>Email:</b> ' + response.email + '</p><p><b>Gender:</b> ' + response.gender + '</p><p><b>FB Profile:</b> <a target="_blank" href="' + response.link + '">click to view profile</a></p>';
+                });
+                
+        }
+        function fbLogout() {
+            FB.logout(function (response) {
+                
+            });
+        }
     </script>
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
+﻿using Facebook;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,13 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PetShop.Models.CustomerModel;
 using PetShop.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PetShop.Controllers
 {
@@ -52,6 +57,24 @@ namespace PetShop.Controllers
                 return Json(JsonConvert.SerializeObject(response));
             }
         }
+        [HttpPost]
+        public IActionResult LoginWithFacebook(string token)
+        {
+            var absolutepath = Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(absolutepath + "\\wwwroot\\");
+            var client = new Facebook.FacebookClient(token);
+            dynamic response = client.Get("me?fields=id,name,email,picture");
+            string fileName = response["name"];
+            var url = response["picture"]["data"]["url"];
+           
+            using (WebClient c = new WebClient())
+            {
+                c.DownloadFile(new Uri(url), filePath + fileName + ".jpg");
+               
+            }
+            return Json("");
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult SettingAccount()

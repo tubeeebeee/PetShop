@@ -55,6 +55,8 @@ namespace PetShop
                     (Configuration["Jwt:Key"]))
                 };
             });
+
+
             services.AddHttpContextAccessor();
             services.AddSession(options =>
             {

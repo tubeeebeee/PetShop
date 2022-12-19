@@ -34,6 +34,7 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+            <div id="fb-root"></div>
         </main>
     </div>
 
@@ -48,6 +49,32 @@
     <script src="~/js/parsley.min.js"></script>
     <script src="~/js/parsley-vi.js"></script>
     <script src="~/js/jquery.toast.min.js"></script>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '682229193340283',
+                cookie: true,
+                xfbml: true,
+                version: '{api-version}'
+            });
+        };
+       
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        
+
+
+    </script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v15.0&appId=682229193340283&autoLogAppEvents=1" nonce="n4i0ZsX1"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    
 </body>
 </html>
